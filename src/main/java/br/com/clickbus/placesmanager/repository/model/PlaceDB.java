@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Document(value = "place")
 public class PlaceDB {
+    private String id;
     private String name;
     private String slug;
     private String city;

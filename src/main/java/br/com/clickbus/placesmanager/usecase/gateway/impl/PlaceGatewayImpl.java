@@ -8,6 +8,8 @@ import br.com.clickbus.placesmanager.repository.converter.PlaceToPlaceDBConverte
 import br.com.clickbus.placesmanager.usecase.gateway.PlaceGateway;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -19,12 +21,21 @@ public class PlaceGatewayImpl implements PlaceGateway {
     private final PlaceToPlaceDBConverter placeToPlaceDBConverter;
     private final PlaceRepository placeRepository;
 
-
     @Override
     public Place save(final Place place) {
 
         final var placeDB = placeToPlaceDBConverter.convert(place);
         final var savedPlaceDB = placeRepository.save(placeDB);
         return placeDBToPlaceConverter.convert(savedPlaceDB);
+    }
+
+
+    public void delete(String id) {
+        placeRepository.deleteById(id);
+    }
+
+    public Page<Place> listAll(int page, int size) {
+        return placeRepository.findAll(PageRequest.of(page, size))
+                .map(placeDBToPlaceConverter::convert);
     }
 }
