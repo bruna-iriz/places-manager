@@ -2,8 +2,10 @@ package br.com.clickbus.placesmanager.controller;
 
 import br.com.clickbus.placesmanager.controller.converter.PlaceResourceRequestToPlaceConverter;
 import br.com.clickbus.placesmanager.controller.converter.PlaceToPlaceResourceResponseConverter;
+import br.com.clickbus.placesmanager.controller.exception.PlaceManagerResponseException;
 import br.com.clickbus.placesmanager.resource.PlaceResource;
 import br.com.clickbus.placesmanager.usecase.DeletePlaceUseCase;
+import br.com.clickbus.placesmanager.usecase.GetByIdPlaceUsecase;
 import br.com.clickbus.placesmanager.usecase.ListAllPlaceUseCase;
 import br.com.clickbus.placesmanager.usecase.SavePlaceUseCase;
 import lombok.AllArgsConstructor;
@@ -11,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import static java.util.Optional.ofNullable;
 
 @Slf4j
 @AllArgsConstructor
@@ -22,6 +26,7 @@ public class PlacesManagerController {
     private final PlaceToPlaceResourceResponseConverter placeToPlaceResourceResponseConverter;
     private final SavePlaceUseCase savePlaceUseCase;
     private final ListAllPlaceUseCase listAllPlaceUseCase;
+    private final GetByIdPlaceUsecase getByIdPlaceUsecase;
     private final DeletePlaceUseCase deletePlaceUseCase;
 
     @PostMapping
@@ -42,6 +47,15 @@ public class PlacesManagerController {
         log.info("[PLACE-MANAGER][LIST-ALL][REQUEST]: page: {} size {}", page, size);
         return listAllPlaceUseCase.execute(page, size)
                 .map(placeToPlaceResourceResponseConverter::convert);
+    }
+
+    @GetMapping("/{id}")
+    public PlaceResource getById(@PathVariable final String id) {
+        log.info("[PLACE-MANAGER][GET-BY-ID][REQUEST] {} ", id);
+        return ofNullable(id)
+                .flatMap(getByIdPlaceUsecase::execute)
+                .map(placeToPlaceResourceResponseConverter::convert)
+                .orElseThrow(() -> new PlaceManagerResponseException("[PLACE-MANAGER][GET-BY-ID][RESPONSE]: Fail to find Place of id" + id + " in the base."));
     }
 
     @DeleteMapping("/{id}")

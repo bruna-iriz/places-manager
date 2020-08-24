@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Slf4j
 @Component
 @AllArgsConstructor
@@ -30,12 +32,18 @@ public class PlaceGatewayImpl implements PlaceGateway {
     }
 
 
-    public void delete(String id) {
-        placeRepository.deleteById(id);
-    }
-
     public Page<Place> listAll(int page, int size) {
         return placeRepository.findAll(PageRequest.of(page, size))
                 .map(placeDBToPlaceConverter::convert);
+    }
+
+    @Override
+    public Optional<Place> findById(String id) {
+        return placeRepository.findById(id).map(placeDBToPlaceConverter::convert);
+    }
+
+
+    public void delete(String id) {
+        placeRepository.deleteById(id);
     }
 }
