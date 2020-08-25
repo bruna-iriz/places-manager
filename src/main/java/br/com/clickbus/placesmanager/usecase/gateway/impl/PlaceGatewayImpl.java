@@ -3,8 +3,10 @@ package br.com.clickbus.placesmanager.usecase.gateway.impl;
 
 import br.com.clickbus.placesmanager.domain.Place;
 import br.com.clickbus.placesmanager.repository.PlaceRepository;
+import br.com.clickbus.placesmanager.repository.converter.MergeBetweenPlaceDbAndPlaceConverter;
 import br.com.clickbus.placesmanager.repository.converter.PlaceDBToPlaceConverter;
 import br.com.clickbus.placesmanager.repository.converter.PlaceToPlaceDBConverter;
+import br.com.clickbus.placesmanager.repository.model.PlaceDB;
 import br.com.clickbus.placesmanager.usecase.gateway.PlaceGateway;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -22,6 +25,7 @@ public class PlaceGatewayImpl implements PlaceGateway {
     private final PlaceDBToPlaceConverter placeDBToPlaceConverter;
     private final PlaceToPlaceDBConverter placeToPlaceDBConverter;
     private final PlaceRepository placeRepository;
+    private final MergeBetweenPlaceDbAndPlaceConverter mergeBetweenPlaceDbAndPlaceConverter;
 
     @Override
     public Place save(final Place place) {
@@ -31,6 +35,21 @@ public class PlaceGatewayImpl implements PlaceGateway {
         return placeDBToPlaceConverter.convert(savedPlaceDB);
     }
 
+    @Override
+    public Place update(Place place) {
+        return placeRepository.findById(place.getId())
+                .map(placeDB -> getPlaceDB(place, placeDB))
+                .map(placeRepository::save)
+                .map(placeDBToPlaceConverter::convert)
+                .orElseThrow();
+
+
+    }
+
+    private PlaceDB getPlaceDB(Place place, PlaceDB placeDB) {
+        final var convert = placeToPlaceDBConverter.convert(place);
+        return mergeBetweenPlaceDbAndPlaceConverter.convert(placeDB, List.of(convert));
+    }
 
     public Page<Place> listAll(int page, int size) {
         return placeRepository.findAll(PageRequest.of(page, size))
@@ -39,7 +58,8 @@ public class PlaceGatewayImpl implements PlaceGateway {
 
     @Override
     public Optional<Place> findById(String id) {
-        return placeRepository.findById(id).map(placeDBToPlaceConverter::convert);
+        return placeRepository.findById(id)
+                .map(placeDBToPlaceConverter::convert);
     }
 
 

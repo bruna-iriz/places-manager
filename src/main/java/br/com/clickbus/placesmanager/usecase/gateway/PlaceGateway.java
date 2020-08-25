@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public interface PlaceGateway {
     Place save(Place place);
+    Place update(Place place);
     void delete(String id);
     Page<Place> listAll(int page, int size);
     Optional<Place> findById(String id);

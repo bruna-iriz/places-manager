@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlaceResource {
-
+    private String id;
     private String name;
     private String slug;
     private String city;

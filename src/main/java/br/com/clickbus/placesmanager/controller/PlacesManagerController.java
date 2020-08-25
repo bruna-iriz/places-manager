@@ -1,13 +1,11 @@
 package br.com.clickbus.placesmanager.controller;
 
+import br.com.clickbus.placesmanager.controller.converter.PlaceResourceRequestCustomToPlaceConverter;
 import br.com.clickbus.placesmanager.controller.converter.PlaceResourceRequestToPlaceConverter;
 import br.com.clickbus.placesmanager.controller.converter.PlaceToPlaceResourceResponseConverter;
 import br.com.clickbus.placesmanager.controller.exception.PlaceManagerResponseException;
 import br.com.clickbus.placesmanager.resource.PlaceResource;
-import br.com.clickbus.placesmanager.usecase.DeletePlaceUseCase;
-import br.com.clickbus.placesmanager.usecase.GetByIdPlaceUsecase;
-import br.com.clickbus.placesmanager.usecase.ListAllPlaceUseCase;
-import br.com.clickbus.placesmanager.usecase.SavePlaceUseCase;
+import br.com.clickbus.placesmanager.usecase.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -24,7 +22,9 @@ public class PlacesManagerController {
 
     private final PlaceResourceRequestToPlaceConverter placeResourceRequestToPlaceConverter;
     private final PlaceToPlaceResourceResponseConverter placeToPlaceResourceResponseConverter;
+    private final PlaceResourceRequestCustomToPlaceConverter placeResourceRequestCustomToPlaceConverter;
     private final SavePlaceUseCase savePlaceUseCase;
+    private final UpdatePlaceUseCase updatePlaceUseCase;
     private final ListAllPlaceUseCase listAllPlaceUseCase;
     private final GetByIdPlaceUsecase getByIdPlaceUsecase;
     private final DeletePlaceUseCase deletePlaceUseCase;
@@ -39,6 +39,20 @@ public class PlacesManagerController {
         log.info("[PLACE-MANAGER][POST][RESPONSE] {}", placeSaved);
         return placeResponse;
     }
+
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public PlaceResource update(@RequestBody final PlaceResource request, @PathVariable String id) {
+        log.info("[PLACE-MANAGER][PUT][REQUEST] {}", request);
+        final var response = ofNullable(request)
+                .map(placeRequested -> placeResourceRequestCustomToPlaceConverter.convert(placeRequested, id))
+                .map(updatePlaceUseCase::execute)
+                .map(placeToPlaceResourceResponseConverter::convert)
+                .orElseThrow(() -> new PlaceManagerResponseException("[PLACE-MANAGER][PUT][RESPONSE]: Fail to update Place of id" + request.getId() + " in the base."));
+        return response;
+    }
+
 
     @GetMapping
     public Page<PlaceResource> listAll(
