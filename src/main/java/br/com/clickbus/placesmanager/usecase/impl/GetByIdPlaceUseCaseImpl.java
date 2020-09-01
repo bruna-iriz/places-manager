@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class GetByIdPlaceUsecaseImpl implements GetByIdPlaceUsecase {
+public class GetByIdPlaceUseCaseImpl implements GetByIdPlaceUsecase {
 
     private final PlaceGateway placeGateway;
 

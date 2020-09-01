@@ -42,8 +42,6 @@ public class PlaceGatewayImpl implements PlaceGateway {
                 .map(placeRepository::save)
                 .map(placeDBToPlaceConverter::convert)
                 .orElseThrow();
-
-
     }
 
     private PlaceDB getPlaceDB(Place place, PlaceDB placeDB) {
@@ -61,7 +59,6 @@ public class PlaceGatewayImpl implements PlaceGateway {
         return placeRepository.findById(id)
                 .map(placeDBToPlaceConverter::convert);
     }
-
 
     public void delete(String id) {
         placeRepository.deleteById(id);
