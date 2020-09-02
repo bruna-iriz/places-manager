@@ -1,7 +1,7 @@
 package br.com.clickbus.placesmanager.usecase.impl;
 
 import br.com.clickbus.placesmanager.domain.Place;
-import br.com.clickbus.placesmanager.usecase.gateway.impl.PlaceGatewayImpl;
+import br.com.clickbus.placesmanager.repository.gateway.impl.PlaceGatewayImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,7 +42,7 @@ class GetByIdPlaceUseCaseImplTest {
 
         when(getByIdPlaceUseCase.execute(any(String.class))).thenReturn(ofNullable(place));
         final var response = getByIdPlaceUseCase.execute("1234");
-        verify(placeGateway, atLeastOnce()).findById(any(String.class));
+        verify(placeGateway, atLeastOnce()).findById(anyString());
 
         assertNotNull(response);
         assertEquals("1234", response.stream().findFirst().get().getId());

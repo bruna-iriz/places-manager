@@ -1,8 +1,8 @@
 package br.com.clickbus.placesmanager.usecase.impl;
 
 import br.com.clickbus.placesmanager.domain.Place;
-import br.com.clickbus.placesmanager.usecase.gateway.PlaceGateway;
-import br.com.clickbus.placesmanager.usecase.gateway.impl.PlaceGatewayImpl;
+import br.com.clickbus.placesmanager.repository.gateway.PlaceGateway;
+import br.com.clickbus.placesmanager.repository.gateway.impl.PlaceGatewayImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

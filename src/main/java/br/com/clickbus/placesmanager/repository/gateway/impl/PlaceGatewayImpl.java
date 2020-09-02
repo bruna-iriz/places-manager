@@ -1,4 +1,4 @@
-package br.com.clickbus.placesmanager.usecase.gateway.impl;
+package br.com.clickbus.placesmanager.repository.gateway.impl;
 
 
 import br.com.clickbus.placesmanager.domain.Place;
@@ -6,8 +6,8 @@ import br.com.clickbus.placesmanager.repository.PlaceRepository;
 import br.com.clickbus.placesmanager.repository.converter.MergeBetweenPlaceDbAndPlaceConverter;
 import br.com.clickbus.placesmanager.repository.converter.PlaceDBToPlaceConverter;
 import br.com.clickbus.placesmanager.repository.converter.PlaceToPlaceDBConverter;
+import br.com.clickbus.placesmanager.repository.gateway.PlaceGateway;
 import br.com.clickbus.placesmanager.repository.model.PlaceDB;
-import br.com.clickbus.placesmanager.usecase.gateway.PlaceGateway;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

@@ -1,5 +1,4 @@
-package br.com.clickbus.placesmanager.usecase.gateway;
-
+package br.com.clickbus.placesmanager.repository.gateway;
 
 import br.com.clickbus.placesmanager.domain.Place;
 import org.springframework.data.domain.Page;

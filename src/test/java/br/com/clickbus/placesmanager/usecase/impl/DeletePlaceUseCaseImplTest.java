@@ -1,6 +1,6 @@
 package br.com.clickbus.placesmanager.usecase.impl;
 
-import br.com.clickbus.placesmanager.usecase.gateway.impl.PlaceGatewayImpl;
+import br.com.clickbus.placesmanager.repository.gateway.impl.PlaceGatewayImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +23,7 @@ class DeletePlaceUseCaseImplTest {
     @DisplayName("Delete place by Id")
     public void testShouldDeletePlace() {
 
-        doNothing().when(placeGateway).delete(any(String.class));
+        doNothing().when(placeGateway).delete(anyString());
         deletePlaceUseCase.execute("1234");
 
         verify(placeGateway, atLeastOnce()).delete(any());
